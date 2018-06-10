@@ -11,7 +11,7 @@ public class DemoApplicationTests {
 
 	@Test
 	public void contextLoads() {
-//			System.out.println("test pull request");
+			System.out.println("test pull request");
 	}
 
 }
