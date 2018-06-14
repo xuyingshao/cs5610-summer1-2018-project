@@ -47,7 +47,6 @@ public class UserService {
     return null;
   }
 
-
   @PutMapping("/api/login/customer")
   @ResponseBody
   public Customer customerLogin(@RequestBody BaseUser user, HttpSession session, HttpServletResponse response) {
