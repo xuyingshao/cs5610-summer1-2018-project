@@ -123,7 +123,6 @@ public class YelpService {
   }
 
   Restaurant jsonToObject(JSONObject object) {
-
     Restaurant restaurant = new Restaurant();
 
     restaurant.setYelpId(object.getString("id"));
