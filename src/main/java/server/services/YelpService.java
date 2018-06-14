@@ -47,7 +47,7 @@ public class YelpService {
     return jsonArrayToObjectList(myResponse);
   }
 
-  @GetMapping("/api/yelp/restaurant/term/{term}/location/{location}")
+ @GetMapping("/api/yelp/restaurant/term/{term}/location/{location}")
   List<Restaurant> findRestaurantsByTermAndLocation(@PathVariable("term") String term,
                                              @PathVariable("location") String location)
           throws IOException {
@@ -94,6 +94,8 @@ public class YelpService {
     return jsonArrayToObjectList(myResponse);
   }
 
+
+
   @GetMapping("/api/yelp/restaurant/{yelpId}")
   Restaurant findRestaurantByYelpId(@PathVariable("yelpId") String yelpId) throws IOException {
     Request request = new Request.Builder()
@@ -131,6 +133,7 @@ public class YelpService {
     restaurant.setImage_url(object.getString("image_url"));
     restaurant.setDisplay_phone(object.getString("display_phone"));
     JSONArray displayAddress = object.getJSONObject("location").getJSONArray("display_address");
+
     StringBuffer address = new StringBuffer();
     for (int j = 0; j < displayAddress.length(); j++) {
       address.append(displayAddress.get(j)).append(", ");
@@ -143,9 +146,9 @@ public class YelpService {
       category.append(categories.getJSONObject(j).getString("title") + ", ");
     }
     restaurant.setCategory(category.substring(0, category.length() - 2).toString());
+    restaurant.setCategory(category.toString());
     restaurant.setPhone(object.getString("phone"));
     restaurant.setRating(object.getInt("rating"));
-
     return restaurant;
   }
 }

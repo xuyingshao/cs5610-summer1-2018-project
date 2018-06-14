@@ -28,6 +28,7 @@ public class RestaurantService {
   @GetMapping("/api/restaurant/{yelpId}")
   public Restaurant findRestaurantByYelpId(@PathVariable("yelpId") String yelpId,
                                            HttpServletResponse response) {
+
 //    List<Restaurant> restaurants = (List<Restaurant>) restaurantRepository.findAll();
 //
 //    for (Restaurant restaurant : restaurants) {
