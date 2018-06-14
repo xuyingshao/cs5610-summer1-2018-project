@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,14 +28,18 @@ public class RestaurantService {
   @GetMapping("/api/restaurant/{yelpId}")
   public Restaurant findRestaurantByYelpId(@PathVariable("yelpId") String yelpId,
                                            HttpServletResponse response) {
-    List<Restaurant> restaurants = (List<Restaurant>) restaurantRepository.findAll();
-
-    for (Restaurant restaurant : restaurants) {
-      if (restaurant.getYelpId().equals(yelpId)) {
-        return restaurant;
-      }
+//    List<Restaurant> restaurants = (List<Restaurant>) restaurantRepository.findAll();
+//
+//    for (Restaurant restaurant : restaurants) {
+//      if (restaurant.getYelpId().equals(yelpId)) {
+//        return restaurant;
+//      }
+//    }
+    Optional<Restaurant> data = restaurantRepository.findRestaurantByYelpId(yelpId);
+    if (data.isPresent()) {
+      return data.get();
     }
-    response.setStatus(HttpServletResponse.SC_CONFLICT);
+    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     return null;
   }
 }
