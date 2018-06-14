@@ -32,7 +32,7 @@ public class YelpService {
   @GetMapping("/api/yelp/restaurant")
   List<Restaurant> findAllRestaurants() throws IOException {
     Request request = new Request.Builder()
-            .url("https://api.yelp.com/v3/businesses/search?location=boston&radius=40000")
+            .url("https://api.yelp.com/v3/businesses/search?location=boston&limit=50")
             .get()
             .addHeader("authorization", "Bearer " + YELP_API_KEY)
             .addHeader("cache-control", "no-cache")
@@ -47,8 +47,54 @@ public class YelpService {
     return jsonArrayToObjectList(myResponse);
   }
 
+  @GetMapping("/api/yelp/restaurant/term/{term}/location/{location}")
+  List<Restaurant> findRestaurantsByTermAndLocation(@PathVariable("term") String term,
+                                             @PathVariable("location") String location)
+          throws IOException {
+    String url = "https://api.yelp.com/v3/businesses/search?limit=50";
+    location = location.replace(" ", "%20");
+    term = term.replace(" ", "%20");
+    url = url + "&term=" + term + "&location=" + location;
 
-  @GetMapping("/api/yelp/restautant/{yelpId}")
+    Request request = new Request.Builder()
+            .url(url)
+            .get()
+            .addHeader("authorization", "Bearer " + YELP_API_KEY)
+            .addHeader("cache-control", "no-cache")
+            .addHeader("postman-token", "d2f54ea5-ca7e-db6a-9b24-1228699d1030")
+            .build();
+
+    Response response = client.newCall(request).execute();
+    JSONObject jsonObject = new JSONObject(response.body().string().trim());
+    JSONArray myResponse = (JSONArray) jsonObject.get("businesses");
+    return jsonArrayToObjectList(myResponse);
+  }
+
+
+  @GetMapping("/api/yelp/restaurant/location/{location}")
+  List<Restaurant> findRestaurantsByLocation(@PathVariable("location") String location)
+          throws IOException {
+    String url = "https://api.yelp.com/v3/businesses/search?limit=50";
+    location = location.replace(" ", "%20");
+    url = url + "&location=" + location;
+
+    Request request = new Request.Builder()
+            .url(url)
+            .get()
+            .addHeader("authorization", "Bearer " + YELP_API_KEY)
+            .addHeader("cache-control", "no-cache")
+            .addHeader("postman-token", "d2f54ea5-ca7e-db6a-9b24-1228699d1030")
+            .build();
+
+    Response response = client.newCall(request).execute();
+
+    JSONObject jsonObject = new JSONObject(response.body().string().trim());
+    JSONArray myResponse = (JSONArray) jsonObject.get("businesses");
+
+    return jsonArrayToObjectList(myResponse);
+  }
+
+  @GetMapping("/api/yelp/restaurant/{yelpId}")
   Restaurant findRestaurantByYelpId(@PathVariable("yelpId") String yelpId) throws IOException {
     Request request = new Request.Builder()
             .url("https://api.yelp.com/v3/businesses/" + yelpId)
@@ -67,28 +113,11 @@ public class YelpService {
 
   List<Restaurant> jsonArrayToObjectList(JSONArray response) {
     List<Restaurant> restaurants = new ArrayList<Restaurant>();
+
     for (int i = 0; i < response.length(); i++) {
       JSONObject temp = response.getJSONObject(i);
-
-      Restaurant r = jsonToObject(temp);
-
-//      r.setYelpId(temp.getString("id"));
-//      r.setName(temp.getString("name"));
-//      r.setImage_url(temp.getString("image_url"));
-//      r.setDisplay_phone(temp.getString("display_phone"));
-//      JSONArray displayAddress = temp.getJSONObject("location").getJSONArray("display_address");
-//      r.setAddress(displayAddress.get(0).toString() + ", " + displayAddress.get(1).toString());
-//      r.setPhone(temp.getString("phone"));
-//      JSONArray categories = temp.getJSONArray("categories");
-//      StringBuffer category = new StringBuffer();
-//      for (int j = 0; j < categories.length(); j++) {
-//        category.append(categories.getJSONObject(j).getString("title") + " ");
-//      }
-//      r.setCategory(category.toString());
-//      r.setPhone(temp.getString("phone"));
-//      r.setRating(temp.getInt("rating"));
-
-      restaurants.add(r);
+      Restaurant restaurant = jsonToObject(temp);
+      restaurants.add(restaurant);
     }
     return restaurants;
   }
@@ -102,14 +131,18 @@ public class YelpService {
     restaurant.setImage_url(object.getString("image_url"));
     restaurant.setDisplay_phone(object.getString("display_phone"));
     JSONArray displayAddress = object.getJSONObject("location").getJSONArray("display_address");
-    restaurant.setAddress(displayAddress.get(0).toString() + ", " + displayAddress.get(1).toString());
+    StringBuffer address = new StringBuffer();
+    for (int j = 0; j < displayAddress.length(); j++) {
+      address.append(displayAddress.get(j)).append(", ");
+    }
+    restaurant.setAddress(address.substring(0, address.length() - 2).toString());
     restaurant.setPhone(object.getString("phone"));
     JSONArray categories = object.getJSONArray("categories");
     StringBuffer category = new StringBuffer();
     for (int j = 0; j < categories.length(); j++) {
-      category.append(categories.getJSONObject(j).getString("title") + " ");
+      category.append(categories.getJSONObject(j).getString("title") + ", ");
     }
-    restaurant.setCategory(category.toString());
+    restaurant.setCategory(category.substring(0, category.length() - 2).toString());
     restaurant.setPhone(object.getString("phone"));
     restaurant.setRating(object.getInt("rating"));
 
