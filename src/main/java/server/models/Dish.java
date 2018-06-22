@@ -2,6 +2,8 @@ package server.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +17,7 @@ public class Dish {
   private int id;
   private String name;
   private double price;
+  private int position;
   @ManyToOne
   @JsonIgnore
   private Restaurant restaurant;
@@ -46,6 +49,14 @@ public class Dish {
     this.price = price;
   }
 
+  public int getPosition() {
+    return position;
+  }
+
+  public void setPosition(int position) {
+    this.position = position;
+  }
+
   public Restaurant getRestaurant() {
     return restaurant;
   }
@@ -60,5 +71,22 @@ public class Dish {
 
   public void setOrder(Order order) {
     this.order = order;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Dish dish = (Dish) o;
+    return id == dish.id &&
+            Double.compare(dish.price, price) == 0 &&
+            Objects.equals(name, dish.name) &&
+            Objects.equals(restaurant, dish.restaurant);
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(id, name, price, restaurant);
   }
 }

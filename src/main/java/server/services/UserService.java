@@ -164,4 +164,11 @@ public class UserService {
   public void logout(HttpSession session) {
     session.invalidate();
   }
+
+
+  // FIXME, for dev purpose
+  @GetMapping("/api/user")
+  public List<BaseUser> findAllUsers() {
+    return (List<BaseUser>)baseUserRepository.findAll();
+  }
 }
