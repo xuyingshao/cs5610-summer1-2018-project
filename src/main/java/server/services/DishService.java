@@ -43,68 +43,68 @@ public class DishService {
   }
 
 
-  @PostMapping("/api/restaurant/{RID}/dishes")
-  public void saveAllDishesForRestaurant(@PathVariable("RID") int restaurantId,
-                                         HttpServletResponse response,
-                                         @RequestBody List<Dish> menu) {
-    List<Integer> toDelete = new ArrayList<Integer>();
-    int id = 0;
-
-    Optional<Restaurant> restaurantData = restaurantRepository.findById(restaurantId);
-    if (restaurantData.isPresent()) {
-      Restaurant restaurant = restaurantData.get();
-      List<Dish> oldMenu = restaurant.getDishes();
-
-      System.out.println("new menu: ");
-      for (int i = 0; i < menu.size(); i++) {
-        System.out.println(menu.get(i).getName());
-      }
-      System.out.println();
-
-
-      System.out.println("old menu: ");
-      for (int i = 0; i < oldMenu.size(); i++) {
-        System.out.println(oldMenu.get(i).getName());
-      }
-      System.out.println();
-
-
-      for (Dish dish : menu) {
-        Optional<Dish> dishData = dishRepository.findById(dish.getId());
-        if (!dishData.isPresent()) {    // add
-          dish.setRestaurant(restaurant);
-          dishRepository.save(dish);
-        } else {              // update
-          Dish oldDish = dishData.get();
-          if (!oldDish.equals(dish)) {
-            oldDish.setName(dish.getName());
-            oldDish.setPrice(dish.getPrice());
-            oldDish.setPosition(dish.getPosition());
-            dishRepository.save(oldDish);
-          }
-        }
-      }
-
-
-      for (Dish oldDish : oldMenu) {
-        boolean found = false;
-        for (Dish newDish : menu) {
-          if (oldDish.getId() == newDish.getId()) {
-            found = true;
-          }
-        }
-        if (!found) {
-          System.out.println("dish to delete: ");
-          System.out.println(oldDish.getId());
-
-          dishRepository.delete(oldDish);
-//          dishRepository.deleteById(5);
-          id = oldDish.getId();
-          toDelete.add(oldDish.getId());
-        }
-      }
-    }
-  }
+//  @PostMapping("/api/restaurant/{RID}/dishes")
+//  public void saveAllDishesForRestaurant(@PathVariable("RID") int restaurantId,
+//                                         HttpServletResponse response,
+//                                         @RequestBody List<Dish> menu) {
+//    List<Integer> toDelete = new ArrayList<Integer>();
+//    int id = 0;
+//
+//    Optional<Restaurant> restaurantData = restaurantRepository.findById(restaurantId);
+//    if (restaurantData.isPresent()) {
+//      Restaurant restaurant = restaurantData.get();
+//      List<Dish> oldMenu = restaurant.getDishes();
+//
+//      System.out.println("new menu: ");
+//      for (int i = 0; i < menu.size(); i++) {
+//        System.out.println(menu.get(i).getName());
+//      }
+//      System.out.println();
+//
+//
+//      System.out.println("old menu: ");
+//      for (int i = 0; i < oldMenu.size(); i++) {
+//        System.out.println(oldMenu.get(i).getName());
+//      }
+//      System.out.println();
+//
+//
+//      for (Dish dish : menu) {
+//        Optional<Dish> dishData = dishRepository.findById(dish.getId());
+//        if (!dishData.isPresent()) {    // add
+//          dish.setRestaurant(restaurant);
+//          dishRepository.save(dish);
+//        } else {              // update
+//          Dish oldDish = dishData.get();
+//          if (!oldDish.equals(dish)) {
+//            oldDish.setName(dish.getName());
+//            oldDish.setPrice(dish.getPrice());
+//            oldDish.setPosition(dish.getPosition());
+//            dishRepository.save(oldDish);
+//          }
+//        }
+//      }
+//
+//
+//      for (Dish oldDish : oldMenu) {
+//        boolean found = false;
+//        for (Dish newDish : menu) {
+//          if (oldDish.getId() == newDish.getId()) {
+//            found = true;
+//          }
+//        }
+//        if (!found) {
+//          System.out.println("dish to delete: ");
+//          System.out.println(oldDish.getId());
+//
+//          dishRepository.delete(oldDish);
+////          dishRepository.deleteById(5);
+//          id = oldDish.getId();
+//          toDelete.add(oldDish.getId());
+//        }
+//      }
+//    }
+//  }
 
 
   @DeleteMapping("/api/restaurant/{restaurantId}/dish/{dishId}")
@@ -129,8 +129,8 @@ public class DishService {
     return null;
   }
 
-  @PutMapping("/api/dish/{dishId}")
-  public Dish updateDish(@PathVariable("dishId") int dishId,
+  @PutMapping("/api/restaurant/{restaurantId}/dish/{dishId}")
+  public Dish updateDishForRestaurant(@PathVariable("dishId") int dishId,
                          @RequestBody Dish newDish,
                          HttpServletResponse response) {
     Optional<Dish> data = dishRepository.findById(dishId);
@@ -144,16 +144,4 @@ public class DishService {
     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     return null;
   }
-
-
-
-/*
-PUT
-/api/restaurant/{RID}/dish
-updateDishesForRestaurant()
-GET
-/api/restaurant/{RID}/dish/{DID}
-findDishById()
- */
-
 }

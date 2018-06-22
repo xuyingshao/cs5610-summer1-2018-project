@@ -25,8 +25,10 @@ public class Order {
   private Date createdTime;
   private double total;
   private boolean delivered;
-  @OneToMany(mappedBy = "order")
-  private List<Dish> dishes;
+//  @OneToMany(mappedBy = "order")
+//  private List<Dish> dishes;
+  @OneToMany(mappedBy = "order")       // FIXME
+  private List<OrderItem> items;
   @ManyToOne
   @JsonIgnore
   private Customer customer;
@@ -69,13 +71,21 @@ public class Order {
     this.delivered = delivered;
   }
 
-  public List<Dish> getDishes() {
-    return dishes;
+  public List<OrderItem> getItems() {
+    return items;
   }
 
-  public void setDishes(List<Dish> dishes) {
-    this.dishes = dishes;
+  public void setItems(List<OrderItem> items) {
+    this.items = items;
   }
+
+  //  public List<Dish> getDishes() {
+//    return dishes;
+//  }
+//
+//  public void setDishes(List<Dish> dishes) {
+//    this.dishes = dishes;
+//  }
 
   public Customer getCustomer() {
     return customer;
