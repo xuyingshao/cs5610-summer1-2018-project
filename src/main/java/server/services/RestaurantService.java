@@ -25,7 +25,7 @@ public class RestaurantService {
     return (List<Restaurant>) restaurantRepository.findAll();
   }
 
-  @GetMapping("/api/restaurant/{yelpId}")
+  @GetMapping("/api/restaurant/yelp/{yelpId}")
   public Restaurant findRestaurantByYelpId(@PathVariable("yelpId") String yelpId,
                                            HttpServletResponse response) {
 //    List<Restaurant> restaurants = (List<Restaurant>) restaurantRepository.findAll();
@@ -36,6 +36,17 @@ public class RestaurantService {
 //      }
 //    }
     Optional<Restaurant> data = restaurantRepository.findRestaurantByYelpId(yelpId);
+    if (data.isPresent()) {
+      return data.get();
+    }
+    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    return null;
+  }
+
+  @GetMapping("/api/restaurant/{restaurantId}")
+  public Restaurant findRestaurantById(@PathVariable("restaurantId") int restaurantId,
+                                       HttpServletResponse response) {
+    Optional<Restaurant> data = restaurantRepository.findById(restaurantId);
     if (data.isPresent()) {
       return data.get();
     }
