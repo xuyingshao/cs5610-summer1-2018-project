@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -121,6 +122,22 @@ public class DishService {
     if (data.isPresent()) {
       Restaurant restaurant = data.get();
       dish.setRestaurant(restaurant);
+      return dishRepository.save(dish);
+    }
+
+    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    return null;
+  }
+
+  @PutMapping("/api/dish/{dishId}")
+  public Dish updateDish(@PathVariable("dishId") int dishId,
+                         @RequestBody Dish newDish,
+                         HttpServletResponse response) {
+    Optional<Dish> data = dishRepository.findById(dishId);
+    if (data.isPresent()) {
+      Dish dish = data.get();
+      dish.setName(newDish.getName());
+      dish.setPrice(newDish.getPrice());
       return dishRepository.save(dish);
     }
 
