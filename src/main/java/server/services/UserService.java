@@ -19,10 +19,12 @@ import javax.servlet.http.HttpSession;
 import server.models.BaseUser;
 import server.models.Customer;
 import server.models.Deliverer;
+import server.models.Restaurant;
 import server.models.Restaurateur;
 import server.repositories.BaseUserRepository;
 import server.repositories.CustomerRepository;
 import server.repositories.DelivererRepository;
+import server.repositories.RestaurantRepository;
 import server.repositories.RestaurateurRepository;
 
 @RestController
@@ -36,11 +38,30 @@ public class UserService {
   DelivererRepository delivererRepository;
   @Autowired
   RestaurateurRepository restaurateurRepository;
-
+  @Autowired
+  RestaurantRepository restaurantRepository;
 
   @GetMapping("/api/profile/customer/{userId}/account")
   public Customer findCustomerById(@PathVariable("userId") int userId) {
     Optional<Customer> data = customerRepository.findById(userId);
+    if (data.isPresent()) {
+      return data.get();
+    }
+    return null;
+  }
+
+  @GetMapping("/api/profile/restaurateur/{userId}/account")
+  public Restaurateur findRestaurateurById(@PathVariable("userId") int userId) {
+    Optional<Restaurateur> data = restaurateurRepository.findById(userId);
+    if (data.isPresent()) {
+      return data.get();
+    }
+    return null;
+  }
+
+  @GetMapping("/api/profile/deliverer/{userId}/account")
+  public Deliverer findDelivererById(@PathVariable("userId") int userId) {
+    Optional<Deliverer> data = delivererRepository.findById(userId);
     if (data.isPresent()) {
       return data.get();
     }
@@ -123,19 +144,21 @@ public class UserService {
     return null;
   }
 
-  @PostMapping("/api/register/restaurateur")
-  @ResponseBody
-  public Restaurateur restaurateurRegister(@RequestBody Restaurateur restaurateur, HttpSession session, HttpServletResponse response) {
+  @PostMapping("/api/register/restaurateur/{restaurantId}")
+  public Restaurateur restaurateurRegister(
+          @RequestBody Restaurateur restaurateur, @PathVariable("restaurantId") int restaurantId,
+          HttpSession session, HttpServletResponse response) {
     String username = restaurateur.getUsername();
     Optional<BaseUser> data = baseUserRepository.findUserByUsername(username);
     if (!data.isPresent()) {
       session.setAttribute("user", restaurateur);
+      Optional<Restaurant> restaurant = restaurantRepository.findById(restaurantId);
+      restaurant.ifPresent(restaurateur::setRestaurant);
       return restaurateurRepository.save(restaurateur);
     }
     response.setStatus(HttpServletResponse.SC_CONFLICT);
     return null;
   }
-
 
   @PostMapping("/api/logout")
   public void logout(HttpSession session) {
