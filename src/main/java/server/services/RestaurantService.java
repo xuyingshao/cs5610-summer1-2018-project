@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,7 +27,24 @@ public class RestaurantService {
     return (List<Restaurant>) restaurantRepository.findAll();
   }
 
-  @GetMapping("/api/restaurant/{yelpId}")
+  @GetMapping("/api/restaurant/restaurateur/{yelpId}")
+  Boolean findRestaurateurForRestaurantBool(@PathVariable("yelpId") String yelpId) {
+    Optional<Restaurant> data = restaurantRepository.findRestaurantByYelpId(yelpId);
+    return data.isPresent() && data.get().getRestaurateur() != null;
+  }
+
+  @PostMapping("/api/restaurant")
+  Restaurant createRestaurant(@RequestBody Restaurant restaurant, HttpServletResponse response) {
+    Optional<Restaurant> data = restaurantRepository.findRestaurantByYelpId(restaurant.getYelpId());
+    if (data.isPresent()) {
+      response.setStatus(HttpServletResponse.SC_CONFLICT);
+      return null;
+    } else {
+      return restaurantRepository.save(restaurant);
+    }
+  }
+
+  @GetMapping("/api/restaurant/yelp/{yelpId}")
   public Restaurant findRestaurantByYelpId(@PathVariable("yelpId") String yelpId,
                                            HttpServletResponse response) {
 
@@ -37,6 +56,17 @@ public class RestaurantService {
 //      }
 //    }
     Optional<Restaurant> data = restaurantRepository.findRestaurantByYelpId(yelpId);
+    if (data.isPresent()) {
+      return data.get();
+    }
+    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    return null;
+  }
+
+  @GetMapping("/api/restaurant/{restaurantId}")
+  public Restaurant findRestaurantById(@PathVariable("restaurantId") int restaurantId,
+                                       HttpServletResponse response) {
+    Optional<Restaurant> data = restaurantRepository.findById(restaurantId);
     if (data.isPresent()) {
       return data.get();
     }

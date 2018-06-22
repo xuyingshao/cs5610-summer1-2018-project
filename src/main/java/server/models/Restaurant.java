@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,6 +32,16 @@ public class Restaurant {
   private List<Dish> dishes;
   @OneToMany(mappedBy = "restaurant")
   private List<Order> orders;
+  @OneToOne(fetch = FetchType.LAZY)
+  private Restaurateur restaurateur;
+
+  public Restaurateur getRestaurateur() {
+    return restaurateur;
+  }
+
+  public void setRestaurateur(Restaurateur restaurateur) {
+    this.restaurateur = restaurateur;
+  }
 
   public int getId() {
     return id;
