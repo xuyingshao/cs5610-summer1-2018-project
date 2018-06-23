@@ -23,7 +23,7 @@ import server.repositories.DishRepository;
 import server.repositories.RestaurantRepository;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class DishService {
   @Autowired
   DishRepository dishRepository;

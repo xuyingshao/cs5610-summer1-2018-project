@@ -21,6 +21,7 @@ public class Customer extends BaseUser {
   @OneToMany(mappedBy = "customer")
   private List<Order> orders;
 
+
   public String getFirstName() {
     return firstName;
   }

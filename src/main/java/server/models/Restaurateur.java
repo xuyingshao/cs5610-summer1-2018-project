@@ -1,9 +1,12 @@
 package server.models;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -16,6 +19,8 @@ public class Restaurateur extends BaseUser {
   private String lastName;
   @OneToOne
   private Restaurant restaurant;
+  @OneToMany(mappedBy = "restaurateur")
+  private List<Order> orders;
 
   public Restaurant getRestaurant() {
     return restaurant;

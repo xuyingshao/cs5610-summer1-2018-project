@@ -32,7 +32,7 @@ public class Order {
   private Customer customer;
   @ManyToOne
   @JsonIgnore
-  private Restaurant restaurant;
+  private Restaurateur restaurateur;
   @ManyToOne
   @JsonIgnore
   private Deliverer deliverer;
@@ -85,12 +85,12 @@ public class Order {
     this.customer = customer;
   }
 
-  public Restaurant getRestaurant() {
-    return restaurant;
+  public Restaurateur getRestaurateur() {
+    return restaurateur;
   }
 
-  public void setRestaurant(Restaurant restaurant) {
-    this.restaurant = restaurant;
+  public void setRestaurateur(Restaurateur restaurateur) {
+    this.restaurateur = restaurateur;
   }
 
   public Deliverer getDeliverer() {

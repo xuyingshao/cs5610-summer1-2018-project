@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import server.models.Restaurant;
@@ -19,7 +20,7 @@ import server.repositories.RestaurantRepository;
 import server.repositories.RestaurateurRepository;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class RestaurantService {
   @Autowired
   RestaurantRepository restaurantRepository;
@@ -84,6 +85,4 @@ public class RestaurantService {
     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     return null;
   }
-
-
 }
