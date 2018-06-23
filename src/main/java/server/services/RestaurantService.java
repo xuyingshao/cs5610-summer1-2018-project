@@ -11,16 +11,21 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import server.models.Restaurant;
+import server.models.Restaurateur;
 import server.repositories.RestaurantRepository;
+import server.repositories.RestaurateurRepository;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class RestaurantService {
   @Autowired
   RestaurantRepository restaurantRepository;
+  @Autowired
+  RestaurateurRepository restaurateurRepository;
 
   @GetMapping("/api/restaurant")
   List<Restaurant> findAllRestaurants() {
@@ -47,13 +52,6 @@ public class RestaurantService {
   @GetMapping("/api/restaurant/yelp/{yelpId}")
   public Restaurant findRestaurantByYelpId(@PathVariable("yelpId") String yelpId,
                                            HttpServletResponse response) {
-//    List<Restaurant> restaurants = (List<Restaurant>) restaurantRepository.findAll();
-//
-//    for (Restaurant restaurant : restaurants) {
-//      if (restaurant.getYelpId().equals(yelpId)) {
-//        return restaurant;
-//      }
-//    }
     Optional<Restaurant> data = restaurantRepository.findRestaurantByYelpId(yelpId);
     if (data.isPresent()) {
       return data.get();
@@ -68,6 +66,21 @@ public class RestaurantService {
     Optional<Restaurant> data = restaurantRepository.findById(restaurantId);
     if (data.isPresent()) {
       return data.get();
+    }
+    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    return null;
+  }
+
+
+  @GetMapping("/api/restaurant/owner/{userId}")
+  public Restaurant findRestaurantByOwner(@PathVariable("userId") int userId,
+                                          HttpServletResponse response) {
+    Optional<Restaurateur> data = restaurateurRepository.findById(userId);
+
+    if (data.isPresent()) {
+      Restaurateur restaurateur = data.get();
+      Restaurant restaurant = restaurateur.getRestaurant();
+      return restaurant;
     }
     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     return null;

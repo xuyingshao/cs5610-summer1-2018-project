@@ -22,7 +22,7 @@ import okhttp3.Response;
 import server.models.Restaurant;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class YelpService {
 
   ObjectMapper mapper = new ObjectMapper();
@@ -181,7 +181,6 @@ public class YelpService {
 
     restaurant.setPhone(object.getString("phone"));
     restaurant.setRating(object.getInt("rating"));
-
 
     return restaurant;
   }
