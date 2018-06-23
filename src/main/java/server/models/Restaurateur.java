@@ -14,8 +14,7 @@ public class Restaurateur extends BaseUser {
   private String firstName;
   @Column(name = "LAST_NAME", nullable = false)
   private String lastName;
-  @OneToOne(mappedBy = "restaurateur", cascade = CascadeType.ALL,
-          fetch = FetchType.LAZY, optional = false)
+  @OneToOne
   private Restaurant restaurant;
 
   public Restaurant getRestaurant() {

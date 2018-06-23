@@ -25,9 +25,7 @@ public class Order {
   private Date createdTime;
   private double total;
   private boolean delivered;
-//  @OneToMany(mappedBy = "order")
-//  private List<Dish> dishes;
-  @OneToMany(mappedBy = "order")       // FIXME
+  @OneToMany(mappedBy = "order")
   private List<OrderItem> items;
   @ManyToOne
   @JsonIgnore
@@ -78,14 +76,6 @@ public class Order {
   public void setItems(List<OrderItem> items) {
     this.items = items;
   }
-
-  //  public List<Dish> getDishes() {
-//    return dishes;
-//  }
-//
-//  public void setDishes(List<Dish> dishes) {
-//    this.dishes = dishes;
-//  }
 
   public Customer getCustomer() {
     return customer;

@@ -17,7 +17,6 @@ public class Dish {
   private int id;
   private String name;
   private double price;
-  private int position;
   @ManyToOne
   @JsonIgnore
   private Restaurant restaurant;
@@ -47,14 +46,6 @@ public class Dish {
 
   public void setPrice(double price) {
     this.price = price;
-  }
-
-  public int getPosition() {
-    return position;
-  }
-
-  public void setPosition(int position) {
-    this.position = position;
   }
 
   public Restaurant getRestaurant() {

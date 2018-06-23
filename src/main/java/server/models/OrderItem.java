@@ -5,13 +5,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
 public class OrderItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
-  private String dishName;
+  @OneToOne
+  private Dish dish;
   private int amount;
   @ManyToOne
   Order order;
@@ -24,12 +26,12 @@ public class OrderItem {
     this.id = id;
   }
 
-  public String getDishName() {
-    return dishName;
+  public Dish getDish() {
+    return dish;
   }
 
-  public void setDishName(String dishName) {
-    this.dishName = dishName;
+  public void setDish(Dish dish) {
+    this.dish = dish;
   }
 
   public int getAmount() {
@@ -38,5 +40,12 @@ public class OrderItem {
 
   public void setAmount(int amount) {
     this.amount = amount;
+  }
+  public Order getOrder() {
+    return order;
+  }
+
+  public void setOrder(Order order) {
+    this.order = order;
   }
 }

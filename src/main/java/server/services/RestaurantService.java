@@ -14,13 +14,17 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 
 import server.models.Restaurant;
+import server.models.Restaurateur;
 import server.repositories.RestaurantRepository;
+import server.repositories.RestaurateurRepository;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class RestaurantService {
   @Autowired
   RestaurantRepository restaurantRepository;
+  @Autowired
+  RestaurateurRepository restaurateurRepository;
 
   @GetMapping("/api/restaurant")
   List<Restaurant> findAllRestaurants() {
@@ -47,13 +51,6 @@ public class RestaurantService {
   @GetMapping("/api/restaurant/yelp/{yelpId}")
   public Restaurant findRestaurantByYelpId(@PathVariable("yelpId") String yelpId,
                                            HttpServletResponse response) {
-//    List<Restaurant> restaurants = (List<Restaurant>) restaurantRepository.findAll();
-//
-//    for (Restaurant restaurant : restaurants) {
-//      if (restaurant.getYelpId().equals(yelpId)) {
-//        return restaurant;
-//      }
-//    }
     Optional<Restaurant> data = restaurantRepository.findRestaurantByYelpId(yelpId);
     if (data.isPresent()) {
       return data.get();
@@ -72,4 +69,21 @@ public class RestaurantService {
     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     return null;
   }
+
+
+  @GetMapping("/api/restaurant/owner/{userId}")
+  public Restaurant findRestaurantByOwner(@PathVariable("userId") int userId,
+                                          HttpServletResponse response) {
+    Optional<Restaurateur> data = restaurateurRepository.findById(userId);
+
+    if (data.isPresent()) {
+      Restaurateur restaurateur = data.get();
+      Restaurant restaurant = restaurateur.getRestaurant();
+      return restaurant;
+    }
+    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    return null;
+  }
+
+
 }

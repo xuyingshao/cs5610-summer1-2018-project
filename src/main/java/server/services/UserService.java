@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.GeneratedValue;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -144,17 +145,25 @@ public class UserService {
     return null;
   }
 
+
   @PostMapping("/api/register/restaurateur/{restaurantId}")
   public Restaurateur restaurateurRegister(
           @RequestBody Restaurateur restaurateur, @PathVariable("restaurantId") int restaurantId,
           HttpSession session, HttpServletResponse response) {
     String username = restaurateur.getUsername();
-    Optional<BaseUser> data = baseUserRepository.findUserByUsername(username);
-    if (!data.isPresent()) {
+    Optional<BaseUser> userData = baseUserRepository.findUserByUsername(username);
+    if (!userData.isPresent()) {
       session.setAttribute("user", restaurateur);
-      Optional<Restaurant> restaurant = restaurantRepository.findById(restaurantId);
-      restaurant.ifPresent(restaurateur::setRestaurant);
-      return restaurateurRepository.save(restaurateur);
+      Optional<Restaurant> data = restaurantRepository.findById(restaurantId);
+      if (data.isPresent()) {
+        Restaurant restaurant = data.get();
+        restaurateur.setRestaurant(restaurant);
+        Restaurateur res = restaurateurRepository.save(restaurateur);
+        restaurant.setRestaurateur(res);
+        return restaurateurRepository.save(restaurateur);
+      }
+      response.setStatus(HttpServletResponse.SC_CONFLICT);
+      return null;
     }
     response.setStatus(HttpServletResponse.SC_CONFLICT);
     return null;
@@ -170,5 +179,27 @@ public class UserService {
   @GetMapping("/api/user")
   public List<BaseUser> findAllUsers() {
     return (List<BaseUser>)baseUserRepository.findAll();
+  }
+
+//  // FIXME
+//  @GetMapping("/api/session/currentUser")
+//  public int getCurrentUser(HttpSession session) {
+//    System.out.println(session);
+//    BaseUser user = (BaseUser)session.getAttribute("user");
+////    System.out.println(user);
+//    return user.getId();
+//  }
+
+  @GetMapping("/api/user/restaurant/{restaurantId}")
+  public Restaurateur findOwnerOfRestaurant(@PathVariable("restaurantId") int restaurantId,
+                                            HttpServletResponse response) {
+    Optional<Restaurant> data = restaurantRepository.findById(restaurantId);
+
+    if (data.isPresent()) {
+      Restaurant restaurant = data.get();
+      return restaurant.getRestaurateur();
+    }
+    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    return null;
   }
 }
