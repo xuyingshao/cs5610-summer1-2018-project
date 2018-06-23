@@ -19,6 +19,7 @@ public class Customer extends BaseUser {
   @Column(name = "ADDRESS", nullable = false)
   private String address;
   @OneToMany(mappedBy = "customer")
+  @JsonIgnore
   private List<Order> orders;
 
   public String getFirstName() {

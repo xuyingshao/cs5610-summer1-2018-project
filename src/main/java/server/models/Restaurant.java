@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -30,9 +31,8 @@ public class Restaurant {
           cascade = CascadeType.ALL,
           orphanRemoval = true)
   private List<Dish> dishes;
-  @OneToMany(mappedBy = "restaurant")
-  private List<Order> orders;
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne
+  @JsonIgnore
   private Restaurateur restaurateur;
 
   public Restaurateur getRestaurateur() {
@@ -121,13 +121,5 @@ public class Restaurant {
 
   public void setDishes(List<Dish> dishes) {
     this.dishes = dishes;
-  }
-
-  public List<Order> getOrders() {
-    return orders;
-  }
-
-  public void setOrders(List<Order> orders) {
-    this.orders = orders;
   }
 }

@@ -17,6 +17,7 @@ public class Deliverer extends BaseUser {
   @Column(name = "LAST_NAME", nullable = false)
   private String lastName;
   @OneToMany(mappedBy = "deliverer")
+  @JsonIgnore
   private List<Order> orders;
 
   public String getFirstName() {

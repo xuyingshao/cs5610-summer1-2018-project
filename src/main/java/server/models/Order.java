@@ -26,16 +26,21 @@ public class Order {
   private double total;
   private boolean delivered;
   @OneToMany(mappedBy = "order")
-  private List<Dish> dishes;
+  private List<OrderItem> items;
   @ManyToOne
-  @JsonIgnore
   private Customer customer;
   @ManyToOne
-  @JsonIgnore
-  private Restaurant restaurant;
+  private Restaurateur restaurateur;
   @ManyToOne
-  @JsonIgnore
   private Deliverer deliverer;
+
+  public Restaurateur getRestaurateur() {
+    return restaurateur;
+  }
+
+  public void setRestaurateur(Restaurateur restaurateur) {
+    this.restaurateur = restaurateur;
+  }
 
   public int getId() {
     return id;
@@ -69,12 +74,12 @@ public class Order {
     this.delivered = delivered;
   }
 
-  public List<Dish> getDishes() {
-    return dishes;
+  public List<OrderItem> getItems() {
+    return items;
   }
 
-  public void setDishes(List<Dish> dishes) {
-    this.dishes = dishes;
+  public void setItems(List<OrderItem> items) {
+    this.items = items;
   }
 
   public Customer getCustomer() {
@@ -85,13 +90,6 @@ public class Order {
     this.customer = customer;
   }
 
-  public Restaurant getRestaurant() {
-    return restaurant;
-  }
-
-  public void setRestaurant(Restaurant restaurant) {
-    this.restaurant = restaurant;
-  }
 
   public Deliverer getDeliverer() {
     return deliverer;
