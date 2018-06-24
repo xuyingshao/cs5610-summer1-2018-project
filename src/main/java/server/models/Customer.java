@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table (name = "CUSTOMER_PER_CLASS")
+@Table(name = "CUSTOMER_PER_CLASS")
 public class Customer extends BaseUser {
   @Column(name = "FIRST_NAME", nullable = false)
   private String firstName;
@@ -18,7 +19,9 @@ public class Customer extends BaseUser {
   private String lastName;
   @Column(name = "ADDRESS", nullable = false)
   private String address;
-  @OneToMany(mappedBy = "customer")
+  @OneToMany(mappedBy = "customer",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true)
   @JsonIgnore
   private List<Order> orders;
 
