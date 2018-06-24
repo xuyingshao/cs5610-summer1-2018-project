@@ -3,6 +3,7 @@ package server.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -95,6 +96,11 @@ public class OrderService {
       return res;
     }
     return null;
+  }
+
+  @DeleteMapping("/api/order/{orderId}")
+  public void deleteOrderForCustomer(@PathVariable("orderId") int orderId) {
+    orderRepository.deleteById(orderId);
   }
 
   @PutMapping("/api/order/{orderId}/finish")
