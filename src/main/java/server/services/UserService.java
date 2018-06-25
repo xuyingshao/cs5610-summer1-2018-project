@@ -27,11 +27,13 @@ import server.models.BaseUser;
 import server.models.Customer;
 import server.models.Deliverer;
 import server.models.Dish;
+import server.models.Favorite;
 import server.models.Restaurant;
 import server.models.Restaurateur;
 import server.repositories.BaseUserRepository;
 import server.repositories.CustomerRepository;
 import server.repositories.DelivererRepository;
+import server.repositories.FavoriteRepository;
 import server.repositories.RestaurantRepository;
 import server.repositories.RestaurateurRepository;
 
@@ -49,6 +51,8 @@ public class UserService {
   RestaurateurRepository restaurateurRepository;
   @Autowired
   RestaurantRepository restaurantRepository;
+  @Autowired
+  FavoriteRepository favoriteRepository;
 
   @GetMapping("/api/profile/customer/{userId}/account")
   public Customer findCustomerById(@PathVariable("userId") int userId,
@@ -348,27 +352,43 @@ public class UserService {
     return (List<Deliverer>) delivererRepository.findAll();
   }
 
-//  @DeleteMapping("/api/user/customer/{userId}")
-//  public void deleteCustomer(@PathVariable("userId") int userId) {
-//    System.out.println(userId);
-//
-//    customerRepository.deleteById(userId);
-//  }
-//
-//  @DeleteMapping("/api/user/restaurateur/{userId}")
-//  public void deleteRestaurateur(@PathVariable("userId") int userId, HttpServletResponse response) {
-//    Optional<Restaurateur> restaurateurOptional = restaurateurRepository.findById(userId);
-//    if (restaurateurOptional.isPresent()) {
-//      Restaurateur restaurateur = restaurateurOptional.get();
-//      Restaurant restaurant = restaurateur.getRestaurant();
-//      restaurateurRepository.deleteById(userId);
-//      restaurantRepository.deleteById(restaurant.getId());
-//    }
-//    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-//  }
-//
-//  @DeleteMapping("/api/user/deliverer/{userId}")
-//  public void deleteDeliverer(@PathVariable("userId") int userId) {
-//    delivererRepository.deleteById(userId);
-//  }
+  @DeleteMapping("/api/user/customer/{userId}")
+  public void deleteCustomer(@PathVariable("userId") int userId) {
+    System.out.println(userId);
+
+    Optional<Customer> customerOptional = customerRepository.findById(userId);
+    if (customerOptional.isPresent()) {
+      Customer customer = customerOptional.get();
+      List<Favorite> favorites = (List<Favorite>)favoriteRepository.findAll();
+      for (Favorite fav : favorites) {
+        if (fav.getCustomer().getId() == userId) {
+          favoriteRepository.deleteById(fav.getId());
+        }
+      }
+    }
+    customerRepository.deleteById(userId);
+  }
+
+  @DeleteMapping("/api/user/restaurateur/{userId}")
+  public void deleteRestaurateur(@PathVariable("userId") int userId) {
+    Optional<Restaurateur> restaurateurOptional = restaurateurRepository.findById(userId);
+    if (restaurateurOptional.isPresent()) {
+      Restaurateur restaurateur = restaurateurOptional.get();
+      Restaurant restaurant = restaurateur.getRestaurant();
+
+      List<Favorite> favorites = (List<Favorite>)favoriteRepository.findAll();
+      for (Favorite fav : favorites) {
+        if (fav.getRestaurant().getId() == restaurant.getId()) {
+          favoriteRepository.deleteById(fav.getId());
+        }
+      }
+      restaurantRepository.deleteById(restaurant.getId());
+    }
+    restaurateurRepository.deleteById(userId);
+  }
+
+  @DeleteMapping("/api/user/deliverer/{userId}")
+  public void deleteDeliverer(@PathVariable("userId") int userId) {
+    delivererRepository.deleteById(userId);
+  }
 }

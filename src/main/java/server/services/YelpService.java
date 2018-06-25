@@ -174,8 +174,6 @@ public class YelpService {
       category.append(categories.getJSONObject(j).getString("title") + ", ");
     }
     restaurant.setCategory(category.substring(0, category.length() - 2).toString());
-
-    restaurant.setCategory(category.toString());
     restaurant.setPhone(object.getString("phone"));
     restaurant.setRating(object.getInt("rating"));
 

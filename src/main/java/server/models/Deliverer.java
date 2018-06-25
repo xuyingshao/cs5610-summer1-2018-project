@@ -17,7 +17,9 @@ public class Deliverer extends BaseUser {
   private String firstName;
   @Column(name = "LAST_NAME", nullable = false)
   private String lastName;
-  @OneToMany(mappedBy = "deliverer")
+  @OneToMany(mappedBy = "deliverer",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true)
   @JsonIgnore
   private List<Order> orders;
 

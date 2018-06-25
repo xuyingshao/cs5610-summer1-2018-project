@@ -21,7 +21,9 @@ public class Restaurateur extends BaseUser {
   private String lastName;
   @OneToOne
   private Restaurant restaurant;
-  @OneToMany(mappedBy = "restaurateur")
+  @OneToMany(mappedBy = "restaurateur",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true)
   @JsonIgnore
   private List<Order> orders;
 
