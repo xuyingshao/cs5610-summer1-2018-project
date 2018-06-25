@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +26,9 @@ public class Order {
   private Date createdTime;
   private double total;
   private boolean delivered;
-  @OneToMany(mappedBy = "order")
+  @OneToMany(mappedBy = "order",
+          cascade = CascadeType.ALL,
+          orphanRemoval = true)
   private List<OrderItem> items;
   @ManyToOne
   private Customer customer;

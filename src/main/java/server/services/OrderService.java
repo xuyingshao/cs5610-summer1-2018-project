@@ -28,6 +28,7 @@ import server.models.Restaurateur;
 import server.repositories.BaseUserRepository;
 import server.repositories.CustomerRepository;
 import server.repositories.DelivererRepository;
+import server.repositories.OrderItemRepository;
 import server.repositories.OrderRepository;
 import server.repositories.RestaurateurRepository;
 
@@ -44,7 +45,8 @@ public class OrderService {
   DelivererRepository delivererRepository;
   @Autowired
   BaseUserRepository baseUserRepository;
-
+  @Autowired
+  OrderItemRepository orderItemRepository;
 
   @PostMapping("/api/order/restaurateur/{restaurateurId}")
   public Order createOrder(@PathVariable("restaurateurId") int restaurateurId,
@@ -75,6 +77,14 @@ public class OrderService {
       order.setRestaurateur(restaurateurOptional.get());
       order.setDeliverer(deliverer);
       order.setCustomer(customerOptional.get());
+      order = orderRepository.save(order);
+
+      List<OrderItem> items = order.getItems();
+      for (OrderItem item: items) {
+        item.setOrder(order);
+        orderItemRepository.save(item);
+      }
+
       return orderRepository.save(order);
     }
 
