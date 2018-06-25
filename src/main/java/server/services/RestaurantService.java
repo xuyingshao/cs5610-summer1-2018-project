@@ -20,7 +20,8 @@ import server.repositories.RestaurantRepository;
 import server.repositories.RestaurateurRepository;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "https://cs5610-project-client.herokuapp.com", allowCredentials = "true")
 public class RestaurantService {
   @Autowired
   RestaurantRepository restaurantRepository;

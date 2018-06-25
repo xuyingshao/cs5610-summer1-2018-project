@@ -22,7 +22,8 @@ import okhttp3.Response;
 import server.models.Restaurant;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "https://cs5610-project-client.herokuapp.com", allowCredentials = "true")
 public class YelpService {
 
   ObjectMapper mapper = new ObjectMapper();
