@@ -25,8 +25,8 @@ import server.repositories.FavoriteRepository;
 import server.repositories.RestaurantRepository;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-//@CrossOrigin(origins = "https://cs5610-project-client.herokuapp.com", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "https://cs5610-project-client.herokuapp.com", allowCredentials = "true")
 public class FavoriteService {
   @Autowired
   FavoriteRepository favoriteRepository;

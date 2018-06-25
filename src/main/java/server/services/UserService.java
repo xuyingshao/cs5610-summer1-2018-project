@@ -40,8 +40,8 @@ import server.repositories.RestaurateurRepository;
 import server.repositories.ReviewRepository;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-//@CrossOrigin(origins = "https://cs5610-project-client.herokuapp.com", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "https://cs5610-project-client.herokuapp.com", allowCredentials = "true")
 public class UserService {
   @Autowired
   BaseUserRepository baseUserRepository;
@@ -361,7 +361,10 @@ public class UserService {
   @GetMapping("/api/session/user")
   public BaseUser findCurrentCustomer(HttpServletRequest request, HttpServletResponse response) {
     HttpSession session = request.getSession(false);
-    if (session != null) {
+//    if (session != null) {
+//      return (BaseUser) session.getAttribute("user");
+//    }
+    if (session != null && (BaseUser)session.getAttribute("user") != null) {
       return (BaseUser) session.getAttribute("user");
     }
     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
