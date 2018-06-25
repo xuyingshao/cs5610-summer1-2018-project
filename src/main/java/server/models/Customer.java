@@ -25,6 +25,18 @@ public class Customer extends BaseUser {
   @JsonIgnore
   private List<Order> orders;
 
+  public Customer() {}
+
+  public Customer(BaseUser user) {
+    this.setUsername(user.getUsername());
+    this.setPassword(user.getPassword());
+    this.setPhone(user.getPhone());
+    this.setEmail(user.getEmail());
+    this.firstName = "";
+    this.lastName = "";
+    this.address = "";
+  }
+
   public String getFirstName() {
     return firstName;
   }

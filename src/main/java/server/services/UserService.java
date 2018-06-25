@@ -95,6 +95,15 @@ public class UserService {
 
     HttpSession session = request.getSession();
 
+    if (username.equals("admin") && username.equals(password)) {
+      Optional<BaseUser> data = baseUserRepository.findUserByCredentials(username, password);
+      if (data.isPresent()) {
+        BaseUser admin = data.get();
+        session.setAttribute("user", admin);
+        return new Customer(admin);
+      }
+    }
+
     Optional<Customer> data = customerRepository.findCustomerByCredentials(username, password);
     if (data.isPresent()) {
       Customer customer = data.get();
@@ -115,6 +124,15 @@ public class UserService {
 
     HttpSession session = request.getSession();
 
+    if (username.equals("admin") && username.equals(password)) {
+      Optional<BaseUser> data = baseUserRepository.findUserByCredentials(username, password);
+      if (data.isPresent()) {
+        BaseUser admin = data.get();
+        session.setAttribute("user", admin);
+        return new Deliverer(admin);
+      }
+    }
+
     Optional<Deliverer> data = delivererRepository.findDelivererByCredentials(username, password);
     if (data.isPresent()) {
       Deliverer deliverer = data.get();
@@ -134,6 +152,15 @@ public class UserService {
     String password = user.getPassword();
 
     HttpSession session = request.getSession();
+
+    if (username.equals("admin") && username.equals(password)) {
+      Optional<BaseUser> data = baseUserRepository.findUserByCredentials(username, password);
+      if (data.isPresent()) {
+        BaseUser admin = data.get();
+        session.setAttribute("user", admin);
+        return new Restaurateur(admin);
+      }
+    }
 
     Optional<Restaurateur> data = restaurateurRepository.findRestaurateurByCredentials(username, password);
     if (data.isPresent()) {

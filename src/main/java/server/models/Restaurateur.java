@@ -25,6 +25,17 @@ public class Restaurateur extends BaseUser {
   @JsonIgnore
   private List<Order> orders;
 
+  public Restaurateur() {}
+
+  public Restaurateur(BaseUser user) {
+    this.setUsername(user.getUsername());
+    this.setPassword(user.getPassword());
+    this.setPhone(user.getPhone());
+    this.setEmail(user.getEmail());
+    this.firstName = "";
+    this.lastName = "";
+  }
+
   public List<Order> getOrders() {
     return orders;
   }

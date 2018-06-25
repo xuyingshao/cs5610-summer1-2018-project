@@ -21,6 +21,17 @@ public class Deliverer extends BaseUser {
   @JsonIgnore
   private List<Order> orders;
 
+  public Deliverer() {}
+
+  public Deliverer(BaseUser user) {
+    this.setUsername(user.getUsername());
+    this.setPassword(user.getPassword());
+    this.setPhone(user.getPhone());
+    this.setEmail(user.getEmail());
+    this.firstName = "";
+    this.lastName = "";
+  }
+
   public String getFirstName() {
     return firstName;
   }
