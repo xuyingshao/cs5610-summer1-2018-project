@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -331,4 +332,43 @@ public class UserService {
     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     return null;
   }
+
+  @GetMapping("/api/user/customer")
+  public List<Customer> findAllCustomers() {
+    return (List<Customer>) customerRepository.findAll();
+  }
+
+  @GetMapping("/api/user/restaurateur")
+  public List<Restaurateur> findAllRestaurateurs() {
+    return (List<Restaurateur>) restaurateurRepository.findAll();
+  }
+
+  @GetMapping("/api/user/deliverer")
+  public List<Deliverer> findAllDeliverers() {
+    return (List<Deliverer>) delivererRepository.findAll();
+  }
+
+//  @DeleteMapping("/api/user/customer/{userId}")
+//  public void deleteCustomer(@PathVariable("userId") int userId) {
+//    System.out.println(userId);
+//
+//    customerRepository.deleteById(userId);
+//  }
+//
+//  @DeleteMapping("/api/user/restaurateur/{userId}")
+//  public void deleteRestaurateur(@PathVariable("userId") int userId, HttpServletResponse response) {
+//    Optional<Restaurateur> restaurateurOptional = restaurateurRepository.findById(userId);
+//    if (restaurateurOptional.isPresent()) {
+//      Restaurateur restaurateur = restaurateurOptional.get();
+//      Restaurant restaurant = restaurateur.getRestaurant();
+//      restaurateurRepository.deleteById(userId);
+//      restaurantRepository.deleteById(restaurant.getId());
+//    }
+//    response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//  }
+//
+//  @DeleteMapping("/api/user/deliverer/{userId}")
+//  public void deleteDeliverer(@PathVariable("userId") int userId) {
+//    delivererRepository.deleteById(userId);
+//  }
 }

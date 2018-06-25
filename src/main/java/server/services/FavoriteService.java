@@ -158,4 +158,17 @@ public class FavoriteService {
     }
     return restaurants;
   }
+
+  @GetMapping("/api/favorite/restaurant/{restaurantId}")
+  public List<Customer> findFollowersForRestaurant(@PathVariable("restaurantId") int restaurantId) {
+    List<Customer> followers = new ArrayList<Customer>();
+    List<Favorite> favorites = (List<Favorite>) favoriteRepository.findAll();
+
+    for (Favorite fav : favorites) {
+      if (fav.getRestaurant().getId() == restaurantId) {
+        followers.add(fav.getCustomer());
+      }
+    }
+    return followers;
+  }
 }
