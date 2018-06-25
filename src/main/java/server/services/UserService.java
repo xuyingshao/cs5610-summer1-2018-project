@@ -30,12 +30,14 @@ import server.models.Dish;
 import server.models.Favorite;
 import server.models.Restaurant;
 import server.models.Restaurateur;
+import server.models.Review;
 import server.repositories.BaseUserRepository;
 import server.repositories.CustomerRepository;
 import server.repositories.DelivererRepository;
 import server.repositories.FavoriteRepository;
 import server.repositories.RestaurantRepository;
 import server.repositories.RestaurateurRepository;
+import server.repositories.ReviewRepository;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000",
@@ -53,6 +55,8 @@ public class UserService {
   RestaurantRepository restaurantRepository;
   @Autowired
   FavoriteRepository favoriteRepository;
+  @Autowired
+  ReviewRepository reviewRepository;
 
   @GetMapping("/api/profile/customer/{userId}/account")
   public Customer findCustomerById(@PathVariable("userId") int userId,
@@ -214,7 +218,7 @@ public class UserService {
 
   @PutMapping("/api/profile/customer/{userId}/account")
   public Customer updateCustomerProfileAccount(@PathVariable("userId") int userId,
-                                                   @RequestBody Customer customer) {
+                                               @RequestBody Customer customer) {
     Optional<Customer> data = customerRepository.findById(userId);
     if (data.isPresent()) {
       Customer res = data.get();
@@ -270,7 +274,7 @@ public class UserService {
 
   @PutMapping("/api/profile/deliverer/{userId}/account")
   public Deliverer updateDelivererProfileAccount(@PathVariable("userId") int userId,
-                                                    @RequestBody Deliverer deliverer) {
+                                                 @RequestBody Deliverer deliverer) {
     Optional<Deliverer> data = delivererRepository.findById(userId);
     if (data.isPresent()) {
       Deliverer res = data.get();
@@ -354,15 +358,21 @@ public class UserService {
 
   @DeleteMapping("/api/user/customer/{userId}")
   public void deleteCustomer(@PathVariable("userId") int userId) {
-    System.out.println(userId);
-
     Optional<Customer> customerOptional = customerRepository.findById(userId);
     if (customerOptional.isPresent()) {
       Customer customer = customerOptional.get();
-      List<Favorite> favorites = (List<Favorite>)favoriteRepository.findAll();
+      // remove related favorites
+      List<Favorite> favorites = (List<Favorite>) favoriteRepository.findAll();
       for (Favorite fav : favorites) {
         if (fav.getCustomer().getId() == userId) {
           favoriteRepository.deleteById(fav.getId());
+        }
+      }
+      // remove related reviews
+      List<Review> reviews = (List<Review>) reviewRepository.findAll();
+      for (Review review : reviews) {
+        if (review.getCustomer().getId() == userId) {
+          reviewRepository.deleteById(review.getId());
         }
       }
     }
@@ -375,8 +385,8 @@ public class UserService {
     if (restaurateurOptional.isPresent()) {
       Restaurateur restaurateur = restaurateurOptional.get();
       Restaurant restaurant = restaurateur.getRestaurant();
-
-      List<Favorite> favorites = (List<Favorite>)favoriteRepository.findAll();
+      // remove related favorites
+      List<Favorite> favorites = (List<Favorite>) favoriteRepository.findAll();
       for (Favorite fav : favorites) {
         if (fav.getRestaurant().getId() == restaurant.getId()) {
           favoriteRepository.deleteById(fav.getId());
@@ -389,6 +399,17 @@ public class UserService {
 
   @DeleteMapping("/api/user/deliverer/{userId}")
   public void deleteDeliverer(@PathVariable("userId") int userId) {
+    Optional<Deliverer> delivererOptional = delivererRepository.findById(userId);
+    if (delivererOptional.isPresent()) {
+      Deliverer deliverer = delivererOptional.get();
+      // remove related reviews
+      List<Review> reviews = (List<Review>) reviewRepository.findAll();
+      for (Review review : reviews) {
+        if (review.getDeliverer().getId() == userId) {
+          reviewRepository.deleteById(review.getId());
+        }
+      }
+    }
     delivererRepository.deleteById(userId);
   }
 }
