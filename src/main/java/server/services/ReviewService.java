@@ -23,8 +23,8 @@ import server.repositories.DelivererRepository;
 import server.repositories.ReviewRepository;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-@CrossOrigin(origins = "https://cs5610-project-client.herokuapp.com", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//@CrossOrigin(origins = "https://cs5610-project-client.herokuapp.com", allowCredentials = "true")
 public class ReviewService {
   @Autowired
   CustomerRepository customerRepository;
